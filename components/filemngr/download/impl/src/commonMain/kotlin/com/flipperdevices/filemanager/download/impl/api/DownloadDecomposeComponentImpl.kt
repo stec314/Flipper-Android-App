@@ -51,6 +51,10 @@ class DownloadDecomposeComponentImpl @AssistedInject constructor(
         downloadViewModel.tryDownload(file = file)
     }
 
+    override fun downloadAll(files: List<DownloadableFile>) {
+        downloadViewModel.tryDownloadAll(files = files)
+    }
+
     @Composable
     override fun Render() {
         val state by downloadViewModel.state.collectAsState()

@@ -88,45 +88,53 @@ class DownloadViewModel @Inject constructor(
     }
 
     fun tryDownload(file: DownloadableFile) {
+        viewModelScope.launch { downloadOne(file) }
+    }
+
+    fun tryDownloadAll(files: List<DownloadableFile>) {
         viewModelScope.launch {
-            _featureJob?.cancelAndJoin()
+            files.forEach { file -> downloadOne(file) }
+        }
+    }
 
-            mutex.withLock {
-                _featureJob = featureProvider.get<FStorageFeatureApi>()
-                    .onEach { storageFeatureStatus ->
-                        when (storageFeatureStatus) {
-                            FFeatureStatus.NotFound,
-                            FFeatureStatus.Unsupported -> _state.emit(State.NotSupported)
+    private suspend fun downloadOne(file: DownloadableFile) {
+        _featureJob?.cancelAndJoin()
 
-                            FFeatureStatus.Retrieving -> {
-                                _state.emit(
-                                    State.Downloading(
-                                        downloadedSize = 0L,
-                                        totalSize = file.size,
-                                        downloadSpeed = 0L,
-                                        fullPath = file.fullPath
-                                    )
-                                )
-                            }
+        mutex.withLock {
+            _featureJob = featureProvider.get<FStorageFeatureApi>()
+                .onEach { storageFeatureStatus ->
+                    when (storageFeatureStatus) {
+                        FFeatureStatus.NotFound,
+                        FFeatureStatus.Unsupported -> _state.emit(State.NotSupported)
 
-                            is FFeatureStatus.Supported -> {
-                                _state.emit(
-                                    State.Downloading(
-                                        downloadedSize = 0L,
-                                        totalSize = file.size,
-                                        downloadSpeed = 0L,
-                                        fullPath = file.fullPath
-                                    )
+                        FFeatureStatus.Retrieving -> {
+                            _state.emit(
+                                State.Downloading(
+                                    downloadedSize = 0L,
+                                    totalSize = file.size,
+                                    downloadSpeed = 0L,
+                                    fullPath = file.fullPath
                                 )
-                                download(
-                                    storageFeatureApi = storageFeatureStatus.featureApi,
-                                    flipperFileFullPath = file.fullPath
-                                )
-                            }
+                            )
                         }
-                    }.catch { it.printStackTrace() }.launchIn(viewModelScope)
-                _featureJob?.join()
-            }
+
+                        is FFeatureStatus.Supported -> {
+                            _state.emit(
+                                State.Downloading(
+                                    downloadedSize = 0L,
+                                    totalSize = file.size,
+                                    downloadSpeed = 0L,
+                                    fullPath = file.fullPath
+                                )
+                            )
+                            download(
+                                storageFeatureApi = storageFeatureStatus.featureApi,
+                                flipperFileFullPath = file.fullPath
+                            )
+                        }
+                    }
+                }.catch { it.printStackTrace() }.launchIn(viewModelScope)
+            _featureJob?.join()
         }
     }
 

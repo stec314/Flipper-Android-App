@@ -35,6 +35,11 @@ sealed interface BottomBarTabConfig {
         override val enum: BottomBarTabEnum = BottomBarTabEnum.TOOLS
     }
 
+    @Serializable
+    data object FileManager : BottomBarTabConfig {
+        override val enum: BottomBarTabEnum = BottomBarTabEnum.FILE_MANAGER
+    }
+
     companion object {
         fun getInitialConfig(
             getSavedTab: () -> BottomBarTabConfig,
@@ -61,5 +66,6 @@ fun BottomBarTabEnum.toConfig(): BottomBarTabConfig {
         BottomBarTabEnum.ARCHIVE -> BottomBarTabConfig.Archive(null)
         BottomBarTabEnum.APPS -> BottomBarTabConfig.Apps(null)
         BottomBarTabEnum.TOOLS -> BottomBarTabConfig.Tools(null)
+        BottomBarTabEnum.FILE_MANAGER -> BottomBarTabConfig.FileManager
     }
 }

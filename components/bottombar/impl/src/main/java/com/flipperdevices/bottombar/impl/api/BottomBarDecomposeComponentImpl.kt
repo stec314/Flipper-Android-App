@@ -33,6 +33,7 @@ import com.flipperdevices.core.ui.lifecycle.viewModelWithFactory
 import com.flipperdevices.core.ui.lifecycle.viewModelWithFactoryWithoutRemember
 import com.flipperdevices.deeplink.model.Deeplink
 import com.flipperdevices.faphub.main.api.FapHubDecomposeComponent
+import com.flipperdevices.filemanager.main.api.FileManagerDecomposeComponent
 import com.flipperdevices.inappnotification.api.InAppNotificationRenderer
 import com.flipperdevices.info.api.screen.DeviceScreenDecomposeComponent
 import com.flipperdevices.notification.api.FlipperAppNotificationDialogApi
@@ -60,6 +61,7 @@ class BottomBarDecomposeComponentImpl @AssistedInject constructor(
     private val deviceScreenFactory: DeviceScreenDecomposeComponent.Factory,
     private val toolsScreenFactory: ToolsDecomposeComponent.Factory,
     private val fapHubScreenFactory: FapHubDecomposeComponent.Factory,
+    private val fileManagerScreenFactory: FileManagerDecomposeComponent.Factory,
     private val connectionApi: ConnectionApi,
     private val notificationRenderer: InAppNotificationRenderer,
     private val unhandledExceptionRendererApi: UnhandledExceptionRenderApi,
@@ -156,6 +158,11 @@ class BottomBarDecomposeComponentImpl @AssistedInject constructor(
         is BottomBarTabConfig.Apps -> fapHubScreenFactory(
             componentContext = componentContext,
             deeplink = config.deeplink,
+            onBack = { navigation.popOr(onBack::invoke) }
+        )
+
+        BottomBarTabConfig.FileManager -> fileManagerScreenFactory(
+            componentContext = componentContext,
             onBack = { navigation.popOr(onBack::invoke) }
         )
     }

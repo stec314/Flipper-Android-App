@@ -5,6 +5,7 @@ import com.flipperdevices.bottombar.impl.model.BottomBarTabConfig
 import com.flipperdevices.bottombar.impl.model.BottomBarTabConfig.Apps
 import com.flipperdevices.bottombar.impl.model.BottomBarTabConfig.Archive
 import com.flipperdevices.bottombar.impl.model.BottomBarTabConfig.Device
+import com.flipperdevices.bottombar.impl.model.BottomBarTabConfig.FileManager
 import com.flipperdevices.bottombar.impl.model.BottomBarTabConfig.Tools
 import com.flipperdevices.core.preference.pb.SelectedTab
 import com.flipperdevices.core.preference.pb.Settings
@@ -30,6 +31,7 @@ class SelectedTabViewModel @Inject constructor(
             SelectedTab.ARCHIVE -> Archive(null)
             SelectedTab.APPS -> Apps(null)
             SelectedTab.TOOLS -> Tools(null)
+            SelectedTab.FILE_MANAGER -> FileManager
         }
     }
 

@@ -4,5 +4,6 @@ enum class DeeplinkBottomBarTab {
     DEVICE,
     ARCHIVE,
     APPS,
-    TOOLS
+    TOOLS,
+    FILE_MANAGER
 }

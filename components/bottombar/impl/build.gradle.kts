@@ -23,6 +23,7 @@ androidDependencies {
     implementation(projects.components.archive.api)
     implementation(projects.components.inappnotification.api)
     implementation(projects.components.toolstab.api)
+    implementation(projects.components.filemngr.main.api)
     implementation(projects.components.faphub.main.api)
     implementation(projects.components.faphub.installedtab.api)
     implementation(projects.components.deeplink.api)

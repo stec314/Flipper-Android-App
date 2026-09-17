@@ -8,6 +8,7 @@ enum SelectedTab {
   ARCHIVE = 1;
   TOOLS = 2;
   APPS = 3;
+  FILE_MANAGER = 4;
 }
 
 enum SelectedChannel {
