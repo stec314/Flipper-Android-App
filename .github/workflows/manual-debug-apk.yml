@@ -7,6 +7,9 @@ on:
         description: 'Branch or ref to build'
         required: false
         default: 'claude/pensive-hawking-nmsljd'
+  push:
+    branches:
+      - 'claude/pensive-hawking-nmsljd'
 
 jobs:
   build_debug_apk:
@@ -15,7 +18,7 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          ref: ${{ inputs.ref }}
+          ref: ${{ inputs.ref || github.ref }}
           submodules: 'recursive'
       - name: Set up JDK 1.21
         uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5.7.0
