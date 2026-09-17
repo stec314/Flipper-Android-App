@@ -24,6 +24,8 @@ androidDependencies {
     implementation(projects.components.bridge.connection.feature.common.api)
     implementation(projects.components.bridge.connection.feature.provider.api)
     implementation(projects.components.bridge.connection.feature.emulate.api)
+    implementation(projects.components.bridge.connection.feature.screenstreaming.api)
+    implementation(projects.components.bridge.connection.pbutils)
 
     implementation(libs.work.ktx)
     implementation(libs.ktx)
