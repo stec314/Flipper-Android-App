@@ -68,10 +68,13 @@ class DownloadViewModel @Inject constructor(
             _state.emit(State.Error)
         }.onSuccess {
             withContext(Dispatchers.Main) {
-                platformShareHelper.shareFile(
-                    file = pathOnAndroid,
-                    title = getString(Res.string.fm_share_title)
-                )
+                val savedToDevice = platformShareHelper.saveToDownloads(pathOnAndroid)
+                if (!savedToDevice) {
+                    platformShareHelper.shareFile(
+                        file = pathOnAndroid,
+                        title = getString(Res.string.fm_share_title)
+                    )
+                }
             }
             _state.emit(State.Pending)
             viewModelScope.launch { _featureJob?.cancelAndJoin() }
