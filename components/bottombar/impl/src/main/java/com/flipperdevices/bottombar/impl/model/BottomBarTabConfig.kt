@@ -40,6 +40,11 @@ sealed interface BottomBarTabConfig {
         override val enum: BottomBarTabEnum = BottomBarTabEnum.FILE_MANAGER
     }
 
+    @Serializable
+    data object RemoteControl : BottomBarTabConfig {
+        override val enum: BottomBarTabEnum = BottomBarTabEnum.REMOTE_CONTROL
+    }
+
     companion object {
         fun getInitialConfig(
             getSavedTab: () -> BottomBarTabConfig,
@@ -67,5 +72,6 @@ fun BottomBarTabEnum.toConfig(): BottomBarTabConfig {
         BottomBarTabEnum.APPS -> BottomBarTabConfig.Apps(null)
         BottomBarTabEnum.TOOLS -> BottomBarTabConfig.Tools(null)
         BottomBarTabEnum.FILE_MANAGER -> BottomBarTabConfig.FileManager
+        BottomBarTabEnum.REMOTE_CONTROL -> BottomBarTabConfig.RemoteControl
     }
 }

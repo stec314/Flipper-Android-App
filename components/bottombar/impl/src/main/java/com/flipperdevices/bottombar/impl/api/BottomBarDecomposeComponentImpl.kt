@@ -37,6 +37,7 @@ import com.flipperdevices.filemanager.main.api.FileManagerDecomposeComponent
 import com.flipperdevices.inappnotification.api.InAppNotificationRenderer
 import com.flipperdevices.info.api.screen.DeviceScreenDecomposeComponent
 import com.flipperdevices.notification.api.FlipperAppNotificationDialogApi
+import com.flipperdevices.screenstreaming.api.ScreenStreamingDecomposeComponent
 import com.flipperdevices.toolstab.api.ToolsDecomposeComponent
 import com.flipperdevices.ui.decompose.DecomposeComponent
 import com.flipperdevices.ui.decompose.DecomposeOnBackParameter
@@ -62,6 +63,7 @@ class BottomBarDecomposeComponentImpl @AssistedInject constructor(
     private val toolsScreenFactory: ToolsDecomposeComponent.Factory,
     private val fapHubScreenFactory: FapHubDecomposeComponent.Factory,
     private val fileManagerScreenFactory: FileManagerDecomposeComponent.Factory,
+    private val screenStreamingScreenFactory: ScreenStreamingDecomposeComponent.Factory,
     private val connectionApi: ConnectionApi,
     private val notificationRenderer: InAppNotificationRenderer,
     private val unhandledExceptionRendererApi: UnhandledExceptionRenderApi,
@@ -162,6 +164,11 @@ class BottomBarDecomposeComponentImpl @AssistedInject constructor(
         )
 
         BottomBarTabConfig.FileManager -> fileManagerScreenFactory(
+            componentContext = componentContext,
+            onBack = { navigation.popOr(onBack::invoke) }
+        )
+
+        BottomBarTabConfig.RemoteControl -> screenStreamingScreenFactory(
             componentContext = componentContext,
             onBack = { navigation.popOr(onBack::invoke) }
         )
