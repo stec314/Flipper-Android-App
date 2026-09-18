@@ -3,7 +3,6 @@ package com.flipperdevices.widget.impl.di
 import com.flipperdevices.bridge.dao.api.delegates.WidgetDataApi
 import com.flipperdevices.core.di.AppGraph
 import com.flipperdevices.widget.impl.providers.BaseWidgetProvider
-import com.flipperdevices.widget.impl.remotecontrol.RemoteControlPressWorker
 import com.flipperdevices.widget.impl.storage.WidgetStateStorage
 import com.flipperdevices.widget.impl.tasks.StartEmulateWorker
 import com.flipperdevices.widget.impl.tasks.StopEmulateWorker
@@ -24,6 +23,5 @@ interface WidgetComponent {
     fun inject(worker: InvalidateWidgetsWorker)
     fun inject(worker: WaitForEmulateEndWorker)
     fun inject(worker: WaitingForFlipperConnectWorker)
-    fun inject(worker: RemoteControlPressWorker)
     fun inject(provider: BaseWidgetProvider)
 }

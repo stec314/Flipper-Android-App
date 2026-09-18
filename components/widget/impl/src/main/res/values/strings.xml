@@ -34,14 +34,4 @@
     <string name="notification_widget_stop_desc">Send stop request for a flipper</string>
     <string name="notification_widget_waiting_flipper_name">Connecting to the Flipper</string>
     <string name="notification_widget_waiting_flipper_desc">Trying to connect to the flipper</string>
-
-    <string name="widget_title_remote_control">Remote Control</string>
-    <string name="widget_description_remote_control">Shows the Flipper\'s screen and lets you send D-pad presses from the home screen. Updates when you tap a button.</string>
-    <string name="remote_control_widget_screen">Flipper screen</string>
-    <string name="rc_widget_up">Up</string>
-    <string name="rc_widget_down">Down</string>
-    <string name="rc_widget_left">Left</string>
-    <string name="rc_widget_right">Right</string>
-    <string name="rc_widget_ok">Ok</string>
-    <string name="rc_widget_back">Back</string>
 </resources>
