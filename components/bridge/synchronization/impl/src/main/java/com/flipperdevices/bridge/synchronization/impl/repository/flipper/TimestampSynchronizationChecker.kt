@@ -9,10 +9,17 @@ import com.flipperdevices.core.log.info
 import com.flipperdevices.core.progress.DetailedProgressListener
 import com.flipperdevices.core.progress.DetailedProgressWrapperTracker
 import dev.zacsweers.metro.ContributesBinding
+import kotlinx.coroutines.withTimeoutOrNull
 import java.util.concurrent.atomic.AtomicLong
 import dev.zacsweers.metro.Inject
 import kotlin.io.path.Path
 import dev.zacsweers.metro.binding
+
+// The Flipper's RPC layer has no built-in timeout: if a response never arrives (dropped
+// packet, device busy, transient BLE issue) the request suspends forever with no error.
+// Bounding it here lets the caller treat it the same as "timestamp unknown" (already a
+// handled, safe case) instead of freezing the whole synchronization indefinitely.
+private const val FETCH_TIMESTAMP_TIMEOUT_MS = 15_000L
 
 interface TimestampSynchronizationChecker {
     data object TimestampsProgressDetail : DetailedProgressListener.Detail
@@ -42,9 +49,11 @@ class TimestampSynchronizationCheckerImpl @Inject constructor(
         )
 
         val timestampHashes = types.toList().pmap { type ->
-            val response = timestampApi.fetchFolderTimestamp(
-                folder = Path("/ext/").resolve(type.flipperDir).toString()
-            )
+            val response = withTimeoutOrNull(FETCH_TIMESTAMP_TIMEOUT_MS) {
+                timestampApi.fetchFolderTimestamp(
+                    folder = Path("/ext/").resolve(type.flipperDir).toString()
+                )
+            }
             progressTracker.report(
                 current = resultCounter.incrementAndGet(),
                 max = types.size.toLong(),

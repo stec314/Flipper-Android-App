@@ -9,7 +9,9 @@ enum class BottomBarTabEnum(val protobufRepresentation: SelectedTab) {
     DEVICE(SelectedTab.DEVICE),
     ARCHIVE(SelectedTab.ARCHIVE),
     APPS(SelectedTab.APPS),
-    TOOLS(SelectedTab.TOOLS)
+    TOOLS(SelectedTab.TOOLS),
+    FILE_MANAGER(SelectedTab.FILE_MANAGER),
+    REMOTE_CONTROL(SelectedTab.REMOTE_CONTROL)
 }
 
 fun DeeplinkBottomBarTab.toBottomBarTabEnum(): BottomBarTabEnum {
@@ -18,5 +20,7 @@ fun DeeplinkBottomBarTab.toBottomBarTabEnum(): BottomBarTabEnum {
         DeeplinkBottomBarTab.ARCHIVE -> BottomBarTabEnum.ARCHIVE
         DeeplinkBottomBarTab.APPS -> BottomBarTabEnum.APPS
         DeeplinkBottomBarTab.TOOLS -> BottomBarTabEnum.TOOLS
+        DeeplinkBottomBarTab.FILE_MANAGER -> BottomBarTabEnum.FILE_MANAGER
+        DeeplinkBottomBarTab.REMOTE_CONTROL -> BottomBarTabEnum.REMOTE_CONTROL
     }
 }

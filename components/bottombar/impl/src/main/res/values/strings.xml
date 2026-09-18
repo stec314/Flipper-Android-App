@@ -3,4 +3,6 @@
     <string name="bar_title_archive">Archive</string>
     <string name="bar_title_apps">Apps</string>
     <string name="bar_title_tools">Tools</string>
+    <string name="bar_title_file_manager">Files</string>
+    <string name="bar_title_remote_control">Remote</string>
 </resources>

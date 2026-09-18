@@ -179,12 +179,14 @@ class FilesDecomposeComponentImpl @AssistedInject constructor(
                 moveToCallback.invoke(pathsWithType.map(PathWithType::fullPath))
             },
             onExport = { pathsWithTypes ->
-                pathsWithTypes.firstOrNull()?.let { pathWithType ->
-                    DownloadableFile(
-                        fullPath = pathWithType.fullPath,
-                        size = pathWithType.size
-                    )
-                }?.run(downloadDecomposeComponent::download)
+                downloadDecomposeComponent.downloadAll(
+                    pathsWithTypes.map { pathWithType ->
+                        DownloadableFile(
+                            fullPath = pathWithType.fullPath,
+                            size = pathWithType.size
+                        )
+                    }
+                )
             }
         )
         FileOptionsBottomSheet(

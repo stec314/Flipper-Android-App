@@ -51,5 +51,21 @@ fun getTabStateFromFlipperBottomTab(
                 null
             }
         )
+
+        BottomBarTabEnum.FILE_MANAGER -> TabState.Static(
+            selectedIcon = R.drawable.ic_file_manager_filled,
+            notSelectedIcon = R.drawable.ic_file_manager,
+            text = stringResource(R.string.bar_title_file_manager),
+            selectedColor = LocalPallet.current.bottomBarSelected,
+            unselectedColor = LocalPallet.current.bottomBarUnselected
+        )
+
+        BottomBarTabEnum.REMOTE_CONTROL -> TabState.Static(
+            selectedIcon = R.drawable.ic_remote_control_filled,
+            notSelectedIcon = R.drawable.ic_remote_control,
+            text = stringResource(R.string.bar_title_remote_control),
+            selectedColor = LocalPallet.current.bottomBarSelected,
+            unselectedColor = LocalPallet.current.bottomBarUnselected
+        )
     }
 }

@@ -14,6 +14,8 @@ abstract class DownloadDecomposeComponent(
 
     abstract fun download(file: DownloadableFile)
 
+    abstract fun downloadAll(files: List<DownloadableFile>)
+
     fun interface Factory {
         operator fun invoke(
             componentContext: ComponentContext,

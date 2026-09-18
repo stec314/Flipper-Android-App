@@ -15,4 +15,8 @@ class DesktopShareHelper @Inject constructor() : PlatformShareHelper {
     override fun shareFile(file: PlatformSharableFile, title: String) {
         error("The desktop feature is not yet implemented!")
     }
+
+    override fun saveToDownloads(file: PlatformSharableFile): Boolean {
+        error("The desktop feature is not yet implemented!")
+    }
 }

@@ -10,10 +10,18 @@ import com.flipperdevices.bridge.synchronization.impl.di.TaskGraph
 import com.flipperdevices.core.log.LogTagProvider
 import dev.zacsweers.metro.ContributesBinding
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.withTimeout
 import okio.buffer
 import okio.source
 import dev.zacsweers.metro.Inject
 import dev.zacsweers.metro.binding
+
+// The Flipper's RPC layer has no built-in timeout: if a response/chunk never arrives
+// (dropped packet, device busy, transient BLE issue) the call suspends forever with no
+// error. Bounding it here turns a silent, indefinite freeze of the whole synchronization
+// into a bounded failure that DiffKeyExecutor already knows how to recover from (skip
+// this one file, continue with the rest).
+private const val FLIPPER_IO_TIMEOUT_MS = 45_000L
 
 @StorageType(Platform.FLIPPER)
 @ContributesBinding(TaskGraph::class, binding<AbstractKeyStorage>())
@@ -25,12 +33,14 @@ class FlipperKeyStorage @Inject constructor(
     override val TAG = "FlipperKeyStorage"
 
     override suspend fun loadFile(filePath: FlipperFilePath): FlipperKeyContent {
-        val responseBytes = coroutineScope {
-            fileDownloadApi.source(
-                pathOnFlipper = filePath.getPathOnFlipper(),
-                priority = StorageRequestPriority.BACKGROUND,
-                scope = this
-            ).buffer().readByteArray()
+        val responseBytes = withTimeout(FLIPPER_IO_TIMEOUT_MS) {
+            coroutineScope {
+                fileDownloadApi.source(
+                    pathOnFlipper = filePath.getPathOnFlipper(),
+                    priority = StorageRequestPriority.BACKGROUND,
+                    scope = this
+                ).buffer().readByteArray()
+            }
         }
 
         return FlipperKeyContent.RawData(responseBytes)
@@ -43,15 +53,16 @@ class FlipperKeyStorage @Inject constructor(
     override suspend fun saveFile(
         filePath: FlipperFilePath,
         keyContent: FlipperKeyContent
-    ) = keyContent.openStream().use { stream ->
-        fileUploadApi.sink(
-            pathOnFlipper = filePath.getPathOnFlipper(),
-            priority = StorageRequestPriority.BACKGROUND
-        ).use { sink -> sink.buffer().writeAll(stream.source()) }
-        return@use
+    ): Unit = withTimeout(FLIPPER_IO_TIMEOUT_MS) {
+        keyContent.openStream().use { stream ->
+            fileUploadApi.sink(
+                pathOnFlipper = filePath.getPathOnFlipper(),
+                priority = StorageRequestPriority.BACKGROUND
+            ).use { sink -> sink.buffer().writeAll(stream.source()) }
+        }
     }
 
-    override suspend fun deleteFile(filePath: FlipperFilePath) {
+    override suspend fun deleteFile(filePath: FlipperFilePath): Unit = withTimeout(FLIPPER_IO_TIMEOUT_MS) {
         fileDeleteApi.delete(
             path = filePath.getPathOnFlipper(),
             priority = StorageRequestPriority.BACKGROUND

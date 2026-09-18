@@ -2,11 +2,7 @@ package com.flipperdevices.bottombar.impl.viewmodel
 
 import androidx.datastore.core.DataStore
 import com.flipperdevices.bottombar.impl.model.BottomBarTabConfig
-import com.flipperdevices.bottombar.impl.model.BottomBarTabConfig.Apps
-import com.flipperdevices.bottombar.impl.model.BottomBarTabConfig.Archive
-import com.flipperdevices.bottombar.impl.model.BottomBarTabConfig.Device
-import com.flipperdevices.bottombar.impl.model.BottomBarTabConfig.Tools
-import com.flipperdevices.core.preference.pb.SelectedTab
+import com.flipperdevices.bottombar.impl.model.BottomBarTabConfig.RemoteControl
 import com.flipperdevices.core.preference.pb.Settings
 import com.flipperdevices.core.ui.lifecycle.DecomposeViewModel
 import kotlinx.coroutines.flow.first
@@ -15,23 +11,11 @@ import kotlinx.coroutines.runBlocking
 import dev.zacsweers.metro.Inject
 
 /**
- * Needs to promote infrared remotes feature
- * On first update (not first launch) will return tools tab only one time
+ * The app always opens on the Remote Control tab.
  */
 class SelectedTabViewModel @Inject constructor(
     private val settingsDataStore: DataStore<Settings>,
 ) : DecomposeViewModel() {
-
-    private fun toConfig(selectedTab: SelectedTab): BottomBarTabConfig {
-        return when (selectedTab) {
-            SelectedTab.DEVICE,
-            is SelectedTab.Unrecognized -> Device(null)
-
-            SelectedTab.ARCHIVE -> Archive(null)
-            SelectedTab.APPS -> Apps(null)
-            SelectedTab.TOOLS -> Tools(null)
-        }
-    }
 
     private fun setRemoteFeaturePromoted() {
         viewModelScope.launch {
@@ -41,16 +25,9 @@ class SelectedTabViewModel @Inject constructor(
 
     fun getSelectedTab(): BottomBarTabConfig {
         val settings = runBlocking { settingsDataStore.data.first() }
-        if (settings.infrared_remotes_tab_shown) {
-            return toConfig(settings.selected_tab)
-        }
-        // wasStartDialogShown indicates that flipper was already connected at least one time
-        val wasStartDialogShown = settings.notification_dialog_shown
-        if (!wasStartDialogShown) {
+        if (!settings.infrared_remotes_tab_shown) {
             setRemoteFeaturePromoted()
-            return toConfig(settings.selected_tab)
         }
-        setRemoteFeaturePromoted()
-        return Tools(null)
+        return RemoteControl
     }
 }

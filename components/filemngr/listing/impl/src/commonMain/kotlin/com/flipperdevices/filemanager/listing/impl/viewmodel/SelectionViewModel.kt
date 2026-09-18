@@ -72,7 +72,7 @@ class SelectionViewModel @Inject constructor() : DecomposeViewModel() {
         val isEnabled: Boolean = false
     ) {
         val canRename: Boolean = selected.size == 1
-        val canExport: Boolean = selected.size == 1 && selected.all { it.fileType == FileType.FILE }
+        val canExport: Boolean = selected.isNotEmpty() && selected.all { it.fileType == FileType.FILE }
         val canMove: Boolean = selected.size >= 1
         val canDelete: Boolean = selected.size >= 1
     }
